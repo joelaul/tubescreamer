@@ -1,0 +1,204 @@
+/* knob outlines: svg circle with dash-strokearray/offset? */
+
+*, *:before, *:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    margin: 40px;
+    color: #D1E3D7;
+    font-family: sans-serif;
+    user-select: none;
+}
+
+/* align and center top-section, middle, bottom-section */
+
+.tube-screamer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    height: 750px;
+    background: #38A178;
+    border-radius: 25px;
+    border: 3px solid black;
+}
+
+.top-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.power-led {
+    margin-bottom: 4px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: 0 0 2px 2px rgba(0,0,0,.5);
+    background: radial-gradient(lightgray, gray);
+}
+
+.power-led.on {
+    background: radial-gradient(#c4453e, #E9A896);
+}
+
+.knob-grid {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px
+}
+
+.knob {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* create knob markers as pseudo elements so the button doesn't rotate with the marker */
+
+.knob:nth-child(1)::before,
+.knob:nth-child(3)::before,
+.knob:nth-child(5)::before {
+    content: '';
+    position: relative;
+    background: white;
+    width: 5px;
+    height: 10px;
+    border-radius: 25%;
+    bottom: 42px;
+    transform-origin: 0px 42px;
+}
+
+/* apply shadow to used grid items */
+
+.knob:nth-child(1),
+.knob:nth-child(3),
+.knob:nth-child(5) {
+    box-shadow: 0 0 3px 3px rgba(0,0,0,.3);
+}
+
+/* camouflage unused grid items */
+
+.knob:nth-child(2),
+.knob:nth-child(4),
+.knob:nth-child(6) {
+    background: #38A178;
+    cursor: auto;
+    font-size: 20px;
+    text-shadow: 1px 1px black;
+}
+
+/* text adjustments */
+
+.knob:nth-child(4),
+.knob:nth-child(6) {
+    padding-bottom: 70px;
+}
+
+.knob:nth-child(2) {
+    padding-top: 70px;
+}
+
+.knob:nth-child(4) {
+    font-size: 16px;
+} 
+
+.middle {
+    margin: 5px;
+    height: 35px;
+    width: 100%;
+    background: linear-gradient(to right, #38A178, #1A895E, #1d5741, #1A895E, #38A178);
+}
+
+.bottom-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.outline {
+    position: absolute;
+    height: calc(100% - 55px);
+    width: 110%;
+    border: 7px solid #D1E3D7;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0);
+    z-index: 0;
+}
+
+.label {
+    padding-top: 70px;
+    padding-bottom: 30px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.label-details {
+    display: flex;
+    font-size: 20px;
+    font-weight: 600;
+    justify-content: space-around;
+}
+
+.engage {
+    margin: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 3px 3px rgba(0,0,0,.3);
+    border-radius: 3px;
+}
+
+.engage-casing {
+    width: 160px;
+    height: 115px;
+    background: #C8BFB0;
+    border: 2px solid black;
+    border-radius: 3px;
+}
+
+.engage-button {
+    position: absolute;
+    width: 130px;
+    height: 90px;
+    background: #C8BFB0;
+    border: 3px solid black;
+    cursor: pointer;
+}
+
+.engage-button:hover {
+    filter: brightness(105%);
+}
+
+.engage-button:active {
+    filter: brightness(90%);
+} 
+
+.brand {
+    position: relative;
+    bottom: 5px;
+    z-index: 2;
+}
+
+.outline-mask {
+    position: absolute;
+    bottom: 12px;
+    width: 160px;
+    height: 50px;
+    background: #38A178;
+    z-index: 1;
+}
