@@ -4,6 +4,7 @@
 
 const power = document.querySelector('.power-led');
 const engage = document.querySelector('.engage-button');
+
 const od = document.querySelector('.overdrive');
 const tone = document.querySelector('.tone');
 const level = document.querySelector('.level');
@@ -11,10 +12,8 @@ const level = document.querySelector('.level');
 // Variables
 
 let powerOn = false;
-let mouseDown = false;
-let result = null;
 let initPos = null;
-let currentPos = null;
+let currentRot = 0;
 
 // Event handlers
 
@@ -28,41 +27,38 @@ const handleEngage = () => {
     powerOn = true;
 }
 
-const updatePosition = (e, knob) => {
-    console.log(e.target);
-    currentPos = e.clientY;
+const updatePosition = (e) => {
+    const currentPos = e.clientY;
     const delta = initPos - currentPos;
+   
+    let result = delta*1.5;
 
-    if (delta <= -100) {
+    if (currentRot + result >= 150) {
+        result = 150; 
+    }
+    else if (currentRot + result <= -150) {
         result = -150;
     }
-    else if (delta >= 100) {
-        result = 150;
-    }
-    else {
-        result = Math.floor(parseFloat(delta*1.5));
-    }
-    if ((result + 30) % 30 == 0)
 
-    od.style.transform = `rotate(${result}deg)`;
+    od.style.transform = `rotate(${currentRot + result}deg)`;
 }
 
 const handleKnob = (e) => {
-    document.querySelector('.top-section').addEventListener('mousemove', updatePosition)
-    if (!initPos) {
-        initPos = e.clientY;
+    if (powerOn) {
+        if (!initPos) {
+            initPos = e.clientY;
+        }
+        document.querySelector('.top-section').addEventListener('mousemove', updatePosition)
     }
-    updatePosition(e);
-}
-
-const handleMouseDown = () => {
-    mouseDown = true;
 }
 
 const handleMouseUp = () => {
     document.querySelector('.top-section').removeEventListener('mousemove', updatePosition)
-    mouseDown = false;
     initPos = null;
+    if (od.style.transform) {
+        currentRot = parseInt(od.style.transform.split('(')[1].split('d')[0]);
+    }
+    console.log(currentRot);
 }
 
 // Event listeners

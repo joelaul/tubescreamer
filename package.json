@@ -1,8 +1,14 @@
 {
   "name": "tubescreamer",
   "version": "1.0.0",
-  "main": "index.js",
+  "source": "src/index.html",
   "repository": "http://github.com/joelaul/tubescreamer",
   "author": "Joe Lauletta <laulettaj@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "parcel": "^2.8.2"
+  },
+  "scripts": {
+    "build": "parcel build src/index.html"
+  }
 }
