@@ -60,8 +60,7 @@ class Knob {
             lastTouched.currentRot = parseInt(lastTouched.element.style.transform.split('(')[1].split('d')[0]);
         }  
     }
- }
-
+}
 
 const power = document.querySelector('.power-led');
 const engage = document.querySelector('.engage-button');
