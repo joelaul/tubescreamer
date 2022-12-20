@@ -1,4 +1,5 @@
 /* knob outlines: svg circle with dash-strokearray/offset? */
+/* media queries for mobile */
 
 *, *:before, *:after {
     margin: 0;
@@ -9,10 +10,19 @@
 body {
     display: flex;
     justify-content: center;
-    margin: 40px;
+    margin: 20px auto;
     color: #D1E3D7;
     font-family: sans-serif;
     user-select: none;
+}
+
+.ring-mod-on {
+    background-image: url("polka dots.png");
+}
+
+.ring-mod-on-button {
+    color: darkred;
+    text-shadow: black;
 }
 
 /* align and center top-section, middle, bottom-section */
@@ -63,7 +73,7 @@ body {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    cursor: pointer;
+    cursor: grab;
 }
 
 /* create knob markers as pseudo elements so the button doesn't rotate with the marker */
@@ -201,4 +211,56 @@ body {
     height: 50px;
     background: #38A178;
     z-index: 1;
+}
+
+.side-controls {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.button {
+    margin: 10px;
+    width: 100px;
+    height: 100px;
+    font-size: 25px;
+    font-weight: 600;
+    filter: brightness(110%);
+    background: #C8BFB0;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 0 0 2px 2px rgba(0,0,0,.6);
+    cursor: pointer;
+}
+
+.button:hover {
+    filter: brightness(105%);
+}
+
+.button:active {
+    filter: brightness(95%);
+}
+
+.knob.rm {
+    position: relative;
+    top: 10px;
+    left: 25px;
+    background: #C8BFB0;
+    filter: brightness(105%);
+    border: 10px solid darkred;
+    box-shadow: 0 0 3px 3px rgb(5, 5, 5);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    cursor: grab;
+}
+
+.knob.rm::before {
+    position: relative;
+    bottom: 30px;
+}
+
+.off {
+    visibility: hidden;
 }

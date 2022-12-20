@@ -8,10 +8,13 @@
 
     <link rel="stylesheet" href="style.css">
     <script src="app.js" defer></script>
+    <script src="http://unpkg.com/tone"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
     <!-- dependencies ^ -->
 </head>
 
 <body>
+    <audio muted crossorigin="anonymous" src="larada di.wav"></audio>
 
     <div class="tube-screamer">
         <div class="top-section">
@@ -47,6 +50,16 @@
             <div class="outline-mask"></div>
         </div>
     </div>
+    <div class="side-controls">
 
+        <button role="switch" aria-checked="false" class="button play" style="font-size:40px"><i class="fa-sharp fa-solid fa-play"></i></button>
+
+        <button role="switch" aria-checked="false" class="button ringmod">RING MOD</button>
+        
+        <div class="knob rm off">
+        </div>
+
+        <div class="sauce off">SAUCE</div>
+    </div>
 </body>
 </html>
