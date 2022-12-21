@@ -1,5 +1,3 @@
-// knobs get fucked up after reset. Figure it out
-
 // DOM
 
 const power = document.querySelector('.power-led');
@@ -17,7 +15,7 @@ const timeCue = document.querySelector('audio');
 let powerOn = false;
 const MAX_DIST = 3;
 const MAX_FREQ = 6000; 
-const MAX_RMF = 100;
+const MAX_RMF = 55;
 
 // TONE.JS
 
@@ -39,18 +37,16 @@ spiro.sync().start(0);
 // MAKE KNOB CLASS
 
 class Knob {
-    constructor(element, initPos, currentRot) {
+    constructor(element, initPos, initAngle) {
         this.element = element;
         this.initPos = initPos;
-        this.currentRot = currentRot;
+        this.initAngle = initAngle;
     }
 
-    handleReset = () => {
-        let {element, initPos, currentRot} = this;
-    
+    handleReset = () => {    
         if (powerOn) {
-            element.style.transform = `rotate(0deg)`;
-            currentRot = 0;
+            this.element.style.transform = `rotate(0deg)`;
+            this.initAngle = 0;
             if (this == level) {
                 Tone.Master.volume.value = -14;
             }
@@ -67,44 +63,34 @@ class Knob {
     }
 
     updatePosition = (e) => {
-        let {element, initPos, currentRot} = this;
+        let {element, initPos, initAngle} = this;
     
         const currentPos = e.clientY;
         const delta = initPos - currentPos;
-        let result = delta*1.5;
+        const rotation = delta*1.5;  
+        const newAngle = initAngle + rotation;
         
-        if (currentRot + result >= -150 && currentRot + result <= 150) {
-
-            // KNOB ROTATION
-
-            if (currentRot * result < 0) {
-                result = result + currentRot;
-            } else {
-                if (currentRot < result) {
-                    result = result + currentRot;
-                }
-            }
-            element.style.transform = `rotate(${result}deg)`;
+        if (newAngle >= -150 && newAngle <= 150) {
+            element.style.transform = `rotate(${newAngle}deg)`;
 
             // EFFECT
 
             if (this == level) {
                 Tone.Master.volume.value = 
-                (((result + 150) / 300) * 32) - 30;
+                (((newAngle + 150) / 300) * 32) - 30;
             }
             else if (this == tone) {
                 filter.frequency.value = 
-                ((result + 150) / 300) * MAX_FREQ;
+                ((newAngle + 150) / 300) * MAX_FREQ;
             }
             else if (this == od) {
                 dist.distortion = 
-                ((result + 150) / 300) * MAX_DIST;
+                ((newAngle + 150) / 300) * MAX_DIST;
             }
             else if (this == modKnob) {
                 ringMod.frequency.value = 
-                ((result + 150) / 300) * MAX_RMF;
+                ((newAngle + 150) / 300) * MAX_RMF;
             }
-            console.log('mod knob');
         }
     } 
 
@@ -113,17 +99,15 @@ class Knob {
             this.initPos = e.clientY;
             window.addEventListener('mousemove', this.updatePosition);
             window.addEventListener('mouseup', this.handleMouseUp);
-            console.log()
         }
     } 
     
     handleMouseUp = () => {
         window.removeEventListener('mousemove', this.updatePosition);
         window.removeEventListener('mouseup', this.handleMouseUp);
-        this.initPos = null;
         
         if (this.element.style.transform)
-        this.currentRot = parseInt(this.element.style.transform.split('(')[1].split('d')[0]);
+        this.initAngle = parseInt(this.element.style.transform.split('(')[1].split('d')[0]);
     }
 }
 
@@ -210,7 +194,7 @@ const handleEnd = () => {
     play.ariaChecked = 'false';
 }
 
-const init = () => {6 
+const init = () => {
     engage.addEventListener('click', handleEngage);
     play.addEventListener('click', handlePlay);
     ringModEl.addEventListener('click', handleRingMod);
