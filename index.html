@@ -10,56 +10,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
     <script src="app.js" defer></script>
     <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
-    <!-- dependencies ^ -->
 </head>
 
 <body>
     <audio muted crossorigin="anonymous" src="larada di.wav"></audio>
 
-    <div class="tube-screamer">
-        <div class="top-section">
-            <div class="power-led"></div>
-            <div class="knob-grid">
-                <div class="knob overdrive"></div>
-                <div class="knob space-1">TONE</div>
-                <div class="knob level"></div>
-                <div class="knob space-2">OVERDRIVE</div>
-                <div class="knob tone"></div>
-                <div class="knob space-3">LEVEL</div>
-            </div>
-        </div>
-        <div class="middle"></div>
-        <div class="bottom-section">
-            <div class="outline"></div>
-            <div class="label">
-                <div class="label-main">
-                    <h1>TUBE SCREAMER</h1>
-                </div>
-                <div class="label-details">
-                    <span>Overdrive Pro</span>
-                    <span>TS808</span>
+    <div class="wrapper">
+        <div class="tube-screamer">
+            <div class="top-section">
+                <div class="power-led"></div>
+                <div class="knob-grid">
+                    <div class="knob overdrive"></div>
+                    <div class="knob space-1">TONE</div>
+                    <div class="knob level"></div>
+                    <div class="knob space-2">OVERDRIVE</div>
+                    <div class="knob tone"></div>
+                    <div class="knob space-3">LEVEL</div>
                 </div>
             </div>
-            <div class="engage">
-                <div class="engage-casing"></div>
-                <div class="engage-button"></div>
+            <div class="middle"></div>
+            <div class="bottom-section">
+                <div class="outline"></div>
+                <div class="label">
+                    <div class="label-main">
+                        <h1>TUBE SCREAMER</h1>
+                    </div>
+                    <div class="label-details">
+                        <span>Overdrive Pro</span>
+                        <span>TS808</span>
+                    </div>
+                </div>
+                <div class="engage">
+                    <div class="engage-casing"></div>
+                    <div class="engage-button"></div>
+                </div>
+                <div class="brand">
+                    <img src="ibanez.png" width="160" height="auto">
+                </div>
+                <div class="outline-mask"></div>
             </div>
-            <div class="brand">
-                <img src="ibanez.png" width="160" height="auto">
+        </div>
+
+        <div class="side-controls">
+            <button role="switch" aria-checked="false" class="button play" style="font-size:40px"><i class="fa-sharp fa-solid fa-play"></i></button>
+            <button role="switch" aria-checked="false" class="button ringmod">RING MOD</button>
+            <div class="knob rm off">
             </div>
-            <div class="outline-mask"></div>
+            <div class="sauce off">SAUCE</div>
         </div>
-    </div>
-    <div class="side-controls">
-
-        <button role="switch" aria-checked="false" class="button play" style="font-size:40px"><i class="fa-sharp fa-solid fa-play"></i></button>
-
-        <button role="switch" aria-checked="false" class="button ringmod">RING MOD</button>
-        
-        <div class="knob rm off">
-        </div>
-
-        <div class="sauce off">SAUCE</div>
     </div>
 </body>
 </html>

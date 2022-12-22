@@ -1,19 +1,21 @@
-/* knob outlines: svg circle with dash-strokearray/offset? */
-/* media queries for mobile */
-
 *, *:before, *:after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+.wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
 body {
     display: flex;
     justify-content: center;
-    margin: 20px auto;
     color: #D1E3D7;
     font-family: sans-serif;
     user-select: none;
+    transform: scale(90%);
 }
 
 .ring-mod-on {
@@ -263,4 +265,27 @@ body {
 
 .off {
     visibility: hidden;
+}
+
+@media screen and (max-width: 540px) {
+    body {
+        transform: scale(85%);
+    }
+    .wrapper {
+        flex-direction: column;
+        position: relative;
+        bottom: 50px;
+
+    }
+    .side-controls {
+        flex-direction: row;
+        justify-content: center;
+        position: relative;
+        left: 20px;
+    }
+    .button {
+        height: 70px;
+        width: 70px;
+        font-size: 20px;
+    }
 }

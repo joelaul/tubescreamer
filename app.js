@@ -98,13 +98,17 @@ class Knob {
         if (powerOn) {
             this.initPos = e.clientY;
             window.addEventListener('mousemove', this.updatePosition);
+            window.addEventListener('touchmove', this.updatePosition);
             window.addEventListener('mouseup', this.handleMouseUp);
+            window.addEventListener('touchend', this.handleMouseUp);
         }
     } 
     
     handleMouseUp = () => {
         window.removeEventListener('mousemove', this.updatePosition);
+        window.removeEventListener('touchmove', this.updatePosition);
         window.removeEventListener('mouseup', this.handleMouseUp);
+        window.removeEventListener('touchend', this.handleMouseUp);
         
         if (this.element.style.transform)
         this.initAngle = parseInt(this.element.style.transform.split('(')[1].split('d')[0]);
@@ -202,6 +206,7 @@ const init = () => {
 
     for (let knob of knobs) {   
         knob.element.addEventListener('mousedown', knob.handleKnob);
+        knob.element.addEventListener('touchstart', knob.handleKnob);
         knob.element.addEventListener('dblclick', knob.handleReset);
     }
 }
