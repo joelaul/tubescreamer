@@ -31,7 +31,7 @@ filter.rolloff = -12;
 
 const ringMod = new Tone.FrequencyShifter(27).toDestination();
 
-Tone.Master.volume.value = -14;
+Tone.Master.volume.value = -10;
 
 spiro.sync().start(0);
 
@@ -159,11 +159,14 @@ const handleEngage = () => {
         powerOn = false;
 
         dist.disconnect();
+        Tone.Master.volume.value = -10;
+
         document.body.classList.remove('ring-mod-on');
         ringModEl.classList.remove('ring-mod-on-button');
         modKnobEl.classList.add('off');
         return;
     }
+    Tone.Master.volume.value = -14;
     power.classList.add('on');
     powerOn = true;
 

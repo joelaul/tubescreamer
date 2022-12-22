@@ -270,7 +270,7 @@ body {
 
 @media screen and (max-width: 540px) {
     body {
-        transform: scale(85%);
+        transform: scale(75%);
     }
     .wrapper {
         flex-direction: column;
@@ -282,11 +282,35 @@ body {
         flex-direction: row;
         justify-content: center;
         position: relative;
-        left: 20px;
     }
     .button {
-        height: 70px;
-        width: 70px;
+        height: 80px;
+        width: 80px;
         font-size: 20px;
+    }
+    .button.play {
+        order: 0;
+    }
+    .knob.rm {
+        order: 1;
+        position: relative;
+        left: 0px;
+        background: #C8BFB0;
+        filter: brightness(105%);
+        border: 10px solid darkred;
+        box-shadow: 0 0 3px 3px rgb(5, 5, 5);
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        cursor: grab;
+    }
+    .button.ringmod {
+        order: 2;
+    }
+    .knob.rm::before {
+        position: relative;
+        bottom: 35px;
     }
 }
