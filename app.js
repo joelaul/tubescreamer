@@ -114,20 +114,17 @@ class Knob {
     } 
 
     handleKnob = (e) => {
-        if (powerOn) {
-        
-            if (e.type == 'touchstart') {
-               const touch = e.touches[0];
-                this.initPos = touch.clientY;
-            } else {
-                this.initPos = e.clientY;
-            }
-
-            window.addEventListener('mousemove', this.updatePosition);
-            window.addEventListener('touchmove', this.updatePosition);
-            window.addEventListener('mouseup', this.handleMouseUp);
-            window.addEventListener('touchend', this.handleMouseUp);
+        if (e.type == 'touchstart') {
+           const touch = e.touches[0];
+            this.initPos = touch.clientY;
+        } else {
+            this.initPos = e.clientY;
         }
+
+        window.addEventListener('mousemove', this.updatePosition);
+        window.addEventListener('touchmove', this.updatePosition);
+        window.addEventListener('mouseup', this.handleMouseUp);
+        window.addEventListener('touchend', this.handleMouseUp);
     } 
     
     handleMouseUp = () => {
