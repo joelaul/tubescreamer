@@ -17,6 +17,7 @@ const MAX_DIST = 3;
 const MAX_FREQ = 6000; 
 const MAX_RMF = 55;
 let timer = null;
+let storedVol = null;
 
 // TONE.JS
 
@@ -32,7 +33,6 @@ filter.rolloff = -12;
 const ringMod = new Tone.FrequencyShifter(27).toDestination();
 
 Tone.Master.volume.value = -10;
-
 spiro.sync().start(0);
 
 // MAKE KNOB CLASS
@@ -45,21 +45,21 @@ class Knob {
     }
 
     handleReset = () => {    
-        if (powerOn) {
-            this.element.style.transform = `rotate(0deg)`;
-            this.initAngle = 0;
-            if (this == level) {
+        this.element.style.transform = `rotate(0deg)`;
+        this.initAngle = 0;
+        if (this == level) {
+            if (powerOn) {
                 Tone.Master.volume.value = -14;
             }
-            else if (this == tone) {
-                filter.frequency.value = MAX_FREQ / 2;
-            }
-            else if (this == od) {
-                dist.distortion = MAX_DIST / 2;
-            }
-            else if (this == modKnob) {
-                ringMod.frequency.value = MAX_RMF / 2;
-            }
+        }
+        else if (this == tone) {
+            filter.frequency.value = MAX_FREQ / 2;
+        }
+        else if (this == od) {
+            dist.distortion = MAX_DIST / 2;
+        }
+        else if (this == modKnob) {
+            ringMod.frequency.value = MAX_RMF / 2;
         }
     }
 
@@ -95,8 +95,12 @@ class Knob {
             // EFFECT
 
             if (this == level) {
-                Tone.Master.volume.value = 
-                (((newAngle + 150) / 300) * 32) - 30;
+                if (powerOn) {
+                    Tone.Master.volume.value = 
+                    (((newAngle + 150) / 300) * 32) - 30;
+                } else {
+                    storedVol = (((newAngle + 150) / 300) * 32) - 30; 
+                }
             }
             else if (this == tone) {
                 filter.frequency.value = 
@@ -114,20 +118,17 @@ class Knob {
     } 
 
     handleKnob = (e) => {
-        if (powerOn) {
-        
-            if (e.type == 'touchstart') {
-               const touch = e.touches[0];
-                this.initPos = touch.clientY;
-            } else {
-                this.initPos = e.clientY;
-            }
-
-            window.addEventListener('mousemove', this.updatePosition);
-            window.addEventListener('touchmove', this.updatePosition);
-            window.addEventListener('mouseup', this.handleMouseUp);
-            window.addEventListener('touchend', this.handleMouseUp);
+        if (e.type == 'touchstart') {
+            const touch = e.touches[0];
+            this.initPos = touch.clientY;
+        } else {
+            this.initPos = e.clientY;
         }
+
+        window.addEventListener('mousemove', this.updatePosition);
+        window.addEventListener('touchmove', this.updatePosition);
+        window.addEventListener('mouseup', this.handleMouseUp);
+        window.addEventListener('touchend', this.handleMouseUp);
     } 
     
     handleMouseUp = () => {
@@ -140,7 +141,6 @@ class Knob {
         this.initAngle = parseInt(this.element.style.transform.split('(')[1].split('d')[0]);
     }
 }
-
 
 // INSTANTIATE KNOBS
 
@@ -155,7 +155,6 @@ const knobs = [od, tone, level, modKnob];
 const handleEngage = () => {
     if (powerOn) {
         power.classList.remove('on');
-        modKnob
         powerOn = false;
 
         dist.disconnect();
@@ -166,10 +165,10 @@ const handleEngage = () => {
         modKnobEl.classList.add('off');
         return;
     }
-    Tone.Master.volume.value = -14;
     power.classList.add('on');
     powerOn = true;
 
+    Tone.Master.volume.value = storedVol;
     spiro.chain(dist, filter, ringMod);
 
     if (ringModEl.ariaChecked == 'false') {
@@ -205,7 +204,6 @@ const handlePlay = () => {
     Tone.start();
 
     if (play.ariaChecked == 'false') {
-        play.textContent = 'Pause';
         play.ariaChecked = 'true';
         play.innerHTML = '<i class="fa-solid fa-pause"></i>';
         
@@ -214,7 +212,6 @@ const handlePlay = () => {
 
     } else {
         timeCue.pause();
-        play.textContent = 'Play';
         play.ariaChecked = 'false';
         play.innerHTML = '<i class="fa-solid fa-play"></i>';
 
