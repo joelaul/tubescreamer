@@ -16,6 +16,7 @@ let powerOn = false;
 const MAX_DIST = 3;
 const MAX_FREQ = 6000; 
 const MAX_RMF = 55;
+let timer = null;
 
 // TONE.JS
 
@@ -62,10 +63,28 @@ class Knob {
         }
     }
 
+    handleResetTouch = () => {
+        if (!timer) {
+            timer = setTimeout(() => {
+                clearTimeout(timer);
+                timer = null;
+            }, 200);
+            return;
+        }
+        // if the function is called during the 200 ms window where timer has a value, reset
+        this.handleReset();
+    }
+
     updatePosition = (e) => {
         let {element, initPos, initAngle} = this;
-    
-        const currentPos = e.clientY;
+        let currentPos;
+        
+        if (e.type == 'touchmove') {
+           const touch = e.touches[0];
+            currentPos = touch.clientY;
+        } else {
+            currentPos = e.clientY;
+        }
         const delta = initPos - currentPos;
         const rotation = delta*1.5;  
         const newAngle = initAngle + rotation;
@@ -96,7 +115,14 @@ class Knob {
 
     handleKnob = (e) => {
         if (powerOn) {
-            this.initPos = e.clientY;
+        
+            if (e.type == 'touchstart') {
+               const touch = e.touches[0];
+                this.initPos = touch.clientY;
+            } else {
+                this.initPos = e.clientY;
+            }
+
             window.addEventListener('mousemove', this.updatePosition);
             window.addEventListener('touchmove', this.updatePosition);
             window.addEventListener('mouseup', this.handleMouseUp);
@@ -114,6 +140,7 @@ class Knob {
         this.initAngle = parseInt(this.element.style.transform.split('(')[1].split('d')[0]);
     }
 }
+
 
 // INSTANTIATE KNOBS
 
@@ -208,6 +235,7 @@ const init = () => {
         knob.element.addEventListener('mousedown', knob.handleKnob);
         knob.element.addEventListener('touchstart', knob.handleKnob);
         knob.element.addEventListener('dblclick', knob.handleReset);
+        knob.element.addEventListener('touchend', knob.handleResetTouch);
     }
 }
 
