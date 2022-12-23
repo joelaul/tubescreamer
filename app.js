@@ -8,20 +8,24 @@ const levelEl = document.querySelector('.level');
 const play = document.querySelector('.play');
 const ringModEl = document.querySelector('.ringmod');
 const modKnobEl = document.querySelector('.rm');
-const timeCue = document.querySelector('audio');
+const file = document.querySelector('#file');
 
 // VARIABLES
 
 let powerOn = false;
+let doubleTapTimer = null;
+let stopTimer = null;
 const MAX_DIST = 3;
 const MAX_FREQ = 6000; 
 const MAX_RMF = 55;
-let timer = null;
-let storedVol = null;
 
 // TONE.JS
 
-const spiro = new Tone.Player("larada di.wav").toDestination();
+const context = new AudioContext();
+let storedVol = null;
+let timeLeft = null;
+
+let player = new Tone.Player("sample.mp3").toDestination();
 
 const dist = new Tone.Distortion(MAX_DIST / 2).toDestination();
 
@@ -30,10 +34,10 @@ filter.gain.value = 20;
 filter.Q.value = 1.5;
 filter.rolloff = -12;
 
-const ringMod = new Tone.FrequencyShifter(27).toDestination();
+const ringMod = new Tone.FrequencyShifter(MAX_RMF / 2).toDestination();
 
 Tone.Master.volume.value = -10;
-spiro.sync().start(0);
+player.sync().start(0);
 
 // MAKE KNOB CLASS
 
@@ -64,14 +68,14 @@ class Knob {
     }
 
     handleResetTouch = () => {
-        if (!timer) {
-            timer = setTimeout(() => {
-                clearTimeout(timer);
-                timer = null;
+        if (!doubleTapTimer) {
+            doubleTapTimer = setTimeout(() => {
+                clearTimeout(doubleTapTimer);
+                doubleTapTimer = null;
             }, 200);
             return;
         }
-        // if the function is called during the 200 ms window where timer has a value, reset
+        // if knob is touched during the 200 ms window where timer has a value, reset
         this.handleReset();
     }
 
@@ -169,7 +173,7 @@ const handleEngage = () => {
     powerOn = true;
 
     Tone.Master.volume.value = storedVol;
-    spiro.chain(dist, filter, ringMod);
+    player.chain(dist, filter, ringMod);
 
     if (ringModEl.ariaChecked == 'false') {
         ringMod.wet.value = 0;
@@ -202,18 +206,20 @@ const handleRingMod = () => {
 
 const handlePlay = () => {
     Tone.start();
-
     if (play.ariaChecked == 'false') {
         play.ariaChecked = 'true';
         play.innerHTML = '<i class="fa-solid fa-pause"></i>';
-        
-        timeCue.play(); // shadow audio track in the html accessed on end to change pause icon back to play
-        Tone.Transport.start();
 
+        timeLeft = (player.buffer.duration - 2 * (parseFloat(Tone.Transport.position.split(':')[0]) + parseFloat(Tone.Transport.position.split(':')[1])/4 + parseFloat(Tone.Transport.position.split(':')[2])/16)) * 1000;
+        
+        stopTimer = setTimeout(handleEnd, timeLeft)
+        Tone.Transport.start();
     } else {
-        timeCue.pause();
         play.ariaChecked = 'false';
         play.innerHTML = '<i class="fa-solid fa-play"></i>';
+
+        clearTimeout(stopTimer);
+        stopTimer = null;
 
         Tone.Transport.pause();
     }
@@ -225,11 +231,24 @@ const handleEnd = () => {
     play.ariaChecked = 'false';
 }
 
+async function handleFileSelect(e) {
+    handleEnd();
+    player.unsync();
+    const file = e.target.files[e.target.files.length-1];
+    if (file) {
+        const arrayBuffer = await file.arrayBuffer();
+        const audioBuffer = await context.decodeAudioData(arrayBuffer);   
+        player = new Tone.Player(audioBuffer).toDestination();
+        player.sync().start(0);
+        player.chain(dist, filter, ringMod);
+    }
+}
+
 const init = () => {
     engage.addEventListener('click', handleEngage);
     play.addEventListener('click', handlePlay);
     ringModEl.addEventListener('click', handleRingMod);
-    timeCue.addEventListener('ended', handleEnd);
+    file.addEventListener('change', handleFileSelect);
 
     for (let knob of knobs) {   
         knob.element.addEventListener('mousedown', knob.handleKnob);
@@ -240,3 +259,5 @@ const init = () => {
 }
 
 init();
+
+// how to preserve effects on file change?
