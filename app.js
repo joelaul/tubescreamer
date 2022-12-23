@@ -239,7 +239,7 @@ async function handleFileSelect(e) {
         const filename = document.getElementById('file').files[0].name;
         let filename_display = document.getElementById('file-upload');
         // Update element's width to fit the filename
-        filename_display.setAttribute('style','width:auto;');
+        filename_display.setAttribute('style','height:auto;');
         // Replace upload button label with name of uploaded file
         filename_display.innerText = filename;
 
