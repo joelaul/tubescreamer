@@ -235,6 +235,7 @@ body {
     font-size: 15px;
     font-weight: 600;
     text-align: center;
+    word-wrap: break-word;
     background: #C8BFB0;
     filter: brightness(110%);
     border: 2px solid black;
