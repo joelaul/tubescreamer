@@ -240,7 +240,7 @@ async function handleFileSelect(e) {
         const audioBuffer = await context.decodeAudioData(arrayBuffer);   
         player = new Tone.Player(audioBuffer).toDestination();
         player.sync().start(0);
-        player.chain(dist, filter, ringMod);
+        if (powerOn) player.chain(dist, filter, ringMod);
     }
 }
 
