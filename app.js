@@ -236,9 +236,11 @@ async function handleFileSelect(e) {
     player.unsync();
     const file = e.target.files[e.target.files.length-1];
     if (file) {
-        // Replace upload button label with name of uploaded file
         const filename = document.getElementById('file').files[0].name;
         let filename_display = document.getElementById('file-upload');
+        // Update element's width to fit the filename
+        filename_display.setAttribute('style','width:auto;');
+        // Replace upload button label with name of uploaded file
         filename_display.innerText = filename;
 
         const arrayBuffer = await file.arrayBuffer();
