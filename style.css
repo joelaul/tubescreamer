@@ -242,8 +242,8 @@ body {
     border-radius: 5px;
     color: black;
     box-shadow: 0 0 2px 2px rgba(0,0,0,.6);
-    touch-action: manipulation;
     cursor: pointer;
+    touch-action: manipulation;
 }
 
 .side-controls label:hover {

@@ -8,13 +8,14 @@ const levelEl = document.querySelector('.level');
 const play = document.querySelector('.play');
 const ringModEl = document.querySelector('.ringmod');
 const modKnobEl = document.querySelector('.rm');
-const file = document.querySelector('#file');
+const fileEl = document.querySelector('#file');
 
 // VARIABLES
 
 let powerOn = false;
 let doubleTapTimer = null;
 let stopTimer = null;
+let currentFile = null;
 const MAX_DIST = 3;
 const MAX_FREQ = 6000; 
 const MAX_RMF = 55;
@@ -26,14 +27,11 @@ let storedVol = null;
 let timeLeft = null;
 
 let player = new Tone.Player("sample.mp3").toDestination();
-
 const dist = new Tone.Distortion(MAX_DIST / 2).toDestination();
-
 const filter = new Tone.Filter(MAX_FREQ / 2, 'peaking').toDestination();
 filter.gain.value = 20;
 filter.Q.value = 1.5;
 filter.rolloff = -12;
-
 const ringMod = new Tone.FrequencyShifter(MAX_RMF / 2).toDestination();
 
 Tone.Master.volume.value = -10;
@@ -204,23 +202,30 @@ const handleRingMod = () => {
     }
 }
 
+const setStopTimer = () => {
+    timeLeft = (player.buffer.duration - 2 * (parseFloat(Tone.Transport.position.split(':')[0]) + parseFloat(Tone.Transport.position.split(':')[1])/4 + parseFloat(Tone.Transport.position.split(':')[2])/16)) * 1000;
+        
+    stopTimer = setTimeout(handleEnd, timeLeft)
+}
+
+const clearStopTimer = () => {
+    clearTimeout(stopTimer);
+    stopTimer = null;
+}
+
 const handlePlay = () => {
     Tone.start();
     if (play.ariaChecked == 'false') {
         play.ariaChecked = 'true';
         play.innerHTML = '<i class="fa-solid fa-pause"></i>';
 
-        timeLeft = (player.buffer.duration - 2 * (parseFloat(Tone.Transport.position.split(':')[0]) + parseFloat(Tone.Transport.position.split(':')[1])/4 + parseFloat(Tone.Transport.position.split(':')[2])/16)) * 1000;
-        
-        stopTimer = setTimeout(handleEnd, timeLeft)
+        setStopTimer();
         Tone.Transport.start();
     } else {
         play.ariaChecked = 'false';
         play.innerHTML = '<i class="fa-solid fa-play"></i>';
 
-        clearTimeout(stopTimer);
-        stopTimer = null;
-
+        clearStopTimer();
         Tone.Transport.pause();
     }
 }
@@ -232,30 +237,35 @@ const handleEnd = () => {
 }
 
 async function handleFileSelect(e) {
-    handleEnd();
-    player.unsync();
-    const file = e.target.files[e.target.files.length-1];
-    if (file) {
-        const filename = document.getElementById('file').files[0].name;
-        let filename_display = document.getElementById('file-upload');
-        // Update element's width to fit the filename
-        filename_display.setAttribute('style','height:auto;');
-        // Replace upload button label with name of uploaded file
-        filename_display.innerText = filename;
+    let file = e.target.files[0];
+    if (!file) { // user cancels dialog (file == undefined)
+        file = currentFile;
+        currentFile = null;
+    } else { // user chooses a file
+        clearStopTimer();
+        handleEnd();
+        player.unsync();
+        file = e.target.files[0];
+        currentFile = file;
 
         const arrayBuffer = await file.arrayBuffer();
         const audioBuffer = await context.decodeAudioData(arrayBuffer);   
         player = new Tone.Player(audioBuffer).toDestination();
         player.sync().start(0);
-        if (powerOn) player.chain(dist, filter, ringMod);
+        if (powerOn) player.chain(dist, filter, ringMod); 
     }
+    let filename_display = document.getElementById('file-upload');
+    // Update element's width to fit the filename
+    filename_display.setAttribute('style','height:auto;');
+    // Replace upload button label with name of uploaded file
+    filename_display.innerText = file.name;
 }
 
 const init = () => {
     engage.addEventListener('click', handleEngage);
     play.addEventListener('click', handlePlay);
     ringModEl.addEventListener('click', handleRingMod);
-    file.addEventListener('change', handleFileSelect);
+    fileEl.addEventListener('change', handleFileSelect);
 
     for (let knob of knobs) {   
         knob.element.addEventListener('mousedown', knob.handleKnob);
@@ -266,5 +276,3 @@ const init = () => {
 }
 
 init();
-
-// how to preserve effects on file change?
