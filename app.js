@@ -1,7 +1,3 @@
-// IMPORTS
-
-import Knob from "./knob";
-
 // DOM
 
 const power = document.querySelector(".power-led");
@@ -36,6 +32,8 @@ filter.Q.value = 1.5;
 filter.rolloff = -12;
 Tone.Master.volume.value = -10;
 player.sync().start(0);
+
+// CLASSES
 
 class Knob {
   constructor(element, initPos, initAngle) {
