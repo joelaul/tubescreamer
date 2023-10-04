@@ -4,11 +4,6 @@
     box-sizing: border-box;
 }
 
-.wrapper {
-    display: flex;
-    flex-direction: row;
-}
-
 body {
     display: flex;
     justify-content: center;
@@ -16,6 +11,11 @@ body {
     font-family: sans-serif;
     user-select: none;
     transform: scale(90%);
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
 }
 
 .ring-mod-on {
@@ -26,8 +26,6 @@ body {
     color: darkred;
     text-shadow: black;
 }
-
-/* align and center top-section, middle, bottom-section */
 
 .tube-screamer {
     display: flex;
