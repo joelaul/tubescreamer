@@ -1,6 +1,6 @@
 // IMPORTS
 
-import Knob from "./Knob";
+import Knob from "./classes/Knob";
 
 const od = new Knob(odEl, null, 0);
 const tone = new Knob(toneEl, null, 0);
