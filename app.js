@@ -38,7 +38,7 @@ class Knob {
     this.element.style.transform = `rotate(0deg)`;
     this.initAngle = 0;
     if (this == level) {
-      if (powerOn) {
+      if (state.powerOn) {
         Tone.Master.volume.value = -14;
       }
     } else if (this == tone) {
@@ -51,10 +51,10 @@ class Knob {
   };
 
   handleResetTouch = () => {
-    if (!doubleTapTimer) {
-      doubleTapTimer = setTimeout(() => {
-        clearTimeout(doubleTapTimer);
-        doubleTapTimer = null;
+    if (!state.doubleTapTimer) {
+      state.doubleTapTimer = setTimeout(() => {
+        clearTimeout(state.doubleTapTimer);
+        state.doubleTapTimer = null;
       }, 200);
       return;
     }
@@ -84,10 +84,10 @@ class Knob {
       // EFFECT
 
       if (this == level) {
-        if (powerOn) {
+        if (state.powerOn) {
           Tone.Master.volume.value = ((newAngle + 150) / 300) * 32 - 30;
         } else {
-          storedVol = ((newAngle + 150) / 300) * 32 - 30;
+          state.storedVol = ((newAngle + 150) / 300) * 32 - 30;
         }
       } else if (this == tone) {
         filter.frequency.value = ((newAngle + 150) / 300) * MAX_FREQ;
